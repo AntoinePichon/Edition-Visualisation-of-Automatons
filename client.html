@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="UTF-8">
+<head>
+  <title> Autoviz </title>
+<link rel="stylesheet" href="Autoviz.css" />
+</head>
+
+<!-- Gestion de l'inactivité du client -->
+<body  onkeydown="activity = true;" onmousemove="activity = true;">
+  <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="checkBox()" >
+    <label class="onoffswitch-label" for="myonoffswitch">
+      <span class="onoffswitch-inner"></span>
+      <span class="onoffswitch-switch"></span>
+    </label>
+  </div>
+
+<!-- Bouton Play -->
+  <div class="play_button">
+   <a title="Play video" class="play"></a>
+ </div>
+
+<!-- Bouton Help -->
+ <div id="helpbox">
+   <input id="help" type="image" title="Help Support" src="help.png" alt="Help Client"/>
+ </div>
+
+
+ <!-- Contenu de l'aide -->
+
+<!-- Boutons Download/Upload/Delete -->
+   <div id="toolbox">
+     <input type="file" id="hidden-file-upload">
+     <input id="upload-input" type="image" title="upload graph : click to upload from server / ctrl+click to upload from your computer" src="upload-icon.png" alt="upload graph"> 
+     <input type="image" id="download-input" title="download graph: click to download on server / ctrl+click to download on your computer" src="downnload-icon.png" alt="download graph">
+     <input type="image" id="delete-graph" title="delete graph" src="trash-icon.png" alt="delete graph">
+  </div>
+
+
+<!-- Formulaire d'édition -->
+  <div id="color-form">
+    <form action="" method="post">
+      <div>
+        <label for="nodeColor" >Couleur des noeuds :</label>
+        <input type="text" id="nodeColor" name="nodeColor" value="#F6FBFF" onFocus="javascript:this.value=''"/>
+      </div>
+      <div>
+        <label for="transColor" >Couleur des labels :</label>
+        <input type="text" id="transColor" name="transColor" value="#333" onFocus="javascript:this.value=''"/>
+      </div>
+      <div>
+        <label for="activeColor" >Couleur noeud actif :</label>
+        <input type="text" id="activeColor" name="activeColor" value="#FF4136" onFocus="javascript:this.value=''"/>
+      </div>
+      <div>
+        <label for="nodeRadius" >Rayon des noeuds :</label>
+        <input type="text" id="nodeRadius" name="nodeRadius" value="50" onFocus="javascript:this.value=''"/>
+      </div>
+
+      <div class="button">
+        <button id="choices" type="submit">Envoyer vos choix</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="word">
+       <label for="testWord" >Mot à tester  </label>
+       <input type="text" id="testWord" name="testWord"/>
+ 
+     <div class="button">
+       <button id="wordchoice" type="text">Valider le mot</button>
+     </div>
+
+   </div>
+
+   <div id="conteneur">
+     <p class="lettrevalid"></p>
+     <p class="motvalid"></p>
+   </div>
+
+<!-- Ecraser le fichier JSON déja présent ou non -->
+  <div id="confirmBox">
+    <div class="message"></div>
+    <span class="button yes">Oui</span>
+    <span class="button no">Non</span>
+  </div>
+
+<!-- Gestion Upload d'un graphe présent sur le serveur -->
+  <div id="uploadGraph">
+    <div class="message"></div>
+    <select name="file_to_load" id="select_file">
+    </select>
+    <span class="button load">Load</span>
+    <span class="button cancel">Cancel</span>
+  </div>
+
+<!-- Importation du fichier javascript principal, du module d3.js, de la librairie jQuery et du module soket.io.js -->
+  <script src="d3.js" charset="utf-8"></script>
+  <script src="jquery-2.2.3.min.js"></script>
+  <script src=FileSaver.min.js></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="Autoviz.js"></script>
+
+</body>
+
+</html>
