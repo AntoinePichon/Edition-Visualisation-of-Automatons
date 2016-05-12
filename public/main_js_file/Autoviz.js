@@ -1080,7 +1080,19 @@ GraphCreator.prototype.changeIt = function (activecolor, nodecolor, transcolor, 
   consts.nodeRadius = noderadius;
 }
 
+  GraphCreator.prototype.changeActCol = function (activecolor) {
+    var thisGraph = this,
+    consts = thisGraph.consts;
 
+    if (!document.styleSheets) return;
+    var theRules = new Array();
+    if (document.styleSheets[0].cssRules)
+      theRules = document.styleSheets[0].cssRules
+    else if (document.styleSheets[0].rules)
+      theRules = document.styleSheets[0].rules
+    else return;
+    theRules[theRules.length-1].style.fill = activecolor;
+  }
 /**** MAIN ****/
 
 // warn the user when leaving
@@ -1144,44 +1156,98 @@ $(document).ready(function(){
   });
 });
 
-//submit test Word
-    document.getElementById('wordchoice').onclick = function(){
-      graph.changeActiveNode(0);
-      var letter = "";
-      var testWord = document.getElementById("testWord").value;
-      $(".motvalid").text(testWord);
-      $(".lettrevalid").text(letter);
-      socket.emit('sendWord',testWord);
-    }
+  //submit test Word
+  document.getElementById('wordchoice').onclick = function(){
+    var testWord = document.getElementById("testWord").value; 
 
-    socket.on('messagelong', function(message) {
-  alert(message);
+    $(".lettrevalid").css('color','#00BFFF');
+    $(".motvalid").text(testWord);
+    socket.emit('sendWord',testWord);
+    graph.changeActiveNode(0);
+    var letter="";
+    $(".lettrevalid").text(letter);
+    var motnonvalid="";
+    $(".motnonvalid").text(motnonvalid);
+    graph.changeActCol('#00BFFF');
+    var badletter = "";
+    $(".lettrevalid").text(badletter);
+  }
+
+  socket.on('messagelong', function(message) {
+    alert(message);
+  });
+
+  socket.on('messageError', function(message) {
+
+  // var motnonvalid=document.getElementById("testWord").value; 
+  // $(".motnonvalid").text(motnonvalid+"   Mot non valide");
+  var tmpWord="";
+  $(".motvalid").text(tmpWord);
+
 });
 
- socket.on('messageError', function(message) {
-  alert(message);
-});
+  socket.on('activenodes', function(activenodes) {
 
- socket.on('activenodes', function(activenodes) {
-   alert(activenodes);
 
    // Play automaton behavior
-  var play = false;
-  var i=0;
-  var testWord = document.getElementById("testWord").value;
-  var tmpWord = testWord;
-  var letter="";
+   var play = false;
+   var i=1;
+   var testWord = document.getElementById("testWord").value; 
+   var tmpWord = testWord;
+   var letter="";
+   var badletter="";
 
-  $(document).ready(function() {
-  var icon = $('.play');
-  icon.click(function() {
-    graph.changeActiveNode(activenodes[i+1]);
+   $(document).ready(function() {
+    var icon = $('.play');
+    icon.click(function() {
+      if(activenodes.length-1==testWord.length){
+        if(i<testWord.length+1){
+          graph.changeActiveNode(activenodes[i]);
 
+          tmpWord=tmpWord.substring(1,tmpWord.length);
+          $(".motvalid").text(tmpWord);
+          letter=testWord.substring(0,i);
+          $(".lettrevalid").text(letter);
+          i++;
+          if(i==testWord.length+1){
+
+      //graph.changeIt($('#32CD32'), $('#000000'), $('#000000'), 50);
+      letter=testWord;
+      $(".lettrevalid").css('color','#32CD32');
+      $(".lettrevalid").text(letter);
+
+      graph.changeActCol('#32CD32');
+      
+    }
+  }
+}
+else {
+    console.log(i);
+    console.log(activenodes.length);
+  if(i<activenodes.length+1){
+    graph.changeActiveNode(activenodes[i]);
+      
+    if(i<activenodes.length){
     tmpWord=tmpWord.substring(1,tmpWord.length);
     $(".motvalid").text(tmpWord);
-    letter=testWord.substring(0,i+1);
+    letter=testWord.substring(0,i);
     $(".lettrevalid").text(letter);
+} 
+  
+    else {
+      graph.changeActiveNode(activenodes[i-1]);
+    
+    tmpWord=tmpWord.substring(1,tmpWord.length);
+    $(".motvalid").text(tmpWord);
+    badletter=testWord.substring(i-1,i);
+    $(".motnonvalid").text(badletter);
+    $(".lettrevalid").text(letter);
+    //i++;
+      graph.changeActCol('#FF0000');
+    }
     i++;
+  }
+}
   //    icon.toggleClass('active');
   //    if(play == false){
   //     play = true;
@@ -1191,7 +1257,7 @@ $(document).ready(function(){
   //     socket.emit('play', play);
   //   }
      // return false;
-  });
+   });
 });
 });
 
