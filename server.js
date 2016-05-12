@@ -136,52 +136,55 @@ app.use(express.static(__dirname + '/public/style'));
     });
 
     socket.on('sendWord', function(testWord){
-         var word=testWord;
-         var tab = [];
-         var activenodes= [];
-         activenodes[0]=0;
+      var word=testWord;
+      var tab = [];
+      var activenodes= [];
+      activenodes[0]=0;
+      
+      save1 = JSON.parse(save);
+      for (var j=0; j<word.length; j++){
+        var verif=0;
+        var source=0;
+        for (var i = 0; i < save1.edges.length; i++) {
 
-         save1 = JSON.parse(save);
-         for (var j=0; j<word.length; j++){
-           var verif=0;
-           var source=0;
-           for (var i = 0; i < save1.edges.length; i++) {
+          if(save1.edges[i].source==save1.active){
+            source=1;
 
-             if(save1.edges[i].source==save1.active){
-               source=1;
+            //if (save1.edges[i].transition==word.charAt(j)){
+            
+            var reg= new RegExp(String(save1.edges[i].transition),"i");
+            console.log(reg.test(word.charAt(j))); 
+              if (reg.test(word.charAt(j))){
+              save1.active=save1.edges[i].target;
+              tab[j]=word.charAt(j);
+              activenodes[j+1]=save1.active;
+              verif=1;
+            }
+            
+          }
+        };
+      
+        if (source==0){
+          
+          socket.emit('messagelong',"Votre mot est trop long");
+          j=word.length;
+        }
+        else if (verif==0){
+              //ERREUR : NOEUD D'ERREUR : NOEUD À ID = -1 (TOUCHE POUR L'AJOUTER) 
+              //socket.emit('messageError',"Ce mot n'est pas valable");
+              socket.emit('activenodes',activenodes);
+              j=word.length;
+            }
+        
+      };
+      console.log(activenodes);
+      
+      if (tab.length==word.length){
+        console.log('done');
+      socket.emit('activenodes',activenodes);
+      }
+    });
 
-               //if (save1.edges[i].transition==word.charAt(j)){
-
-               var reg= new RegExp(String(save1.edges[i].transition),"i");
-                 if (reg.test(word.charAt(j))){
-                 save1.active=save1.edges[i].target;
-                 tab[j]=word.charAt(j);
-                 activenodes[j+1]=save1.active;
-                 verif=1;
-               }
-
-             }
-           };
-
-           if (source==0){
-
-             socket.emit('messagelong',"Votre mot est trop long");
-             j=word.length;
-           }
-           else if (verif==0){
-
-                 socket.emit('messageError',"Ce mot n'est pas valable");
-                 j=word.length;
-               }
-
-         };
-         console.log(activenodes);
-
-         if (tab.length==word.length){
-           console.log('done');
-         socket.emit('activenodes',activenodes);
-         }
-       });
 
   });
 
