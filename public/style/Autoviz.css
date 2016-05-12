@@ -87,15 +87,16 @@ box-shadow: inset 12px 0 0 0 #f9f9f9;
 /* Helpbox CSS */
 
 #helpbox{
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  float:right;
   margin-bottom: 1em;
   margin-left: 90.7em;
 
 }
 
 #helpbox input{
+  position:absolute;
+  bottom: 0px;
+  right: 0px;
   width: 60px;
   opacity: 0.78;
 }
@@ -137,6 +138,46 @@ cursor: pointer;
   color:red;
 
 }
+
+
+.msgBox{
+  position: absolute;
+  bottom: 1;
+  right: 0;
+  color: #CC0000;
+  margin-right: 30px;
+  margin-top: 100px;
+  padding: 1em;
+  font-size:40px;
+}
+
+.alr {
+  font-size: 20px;
+  width:500px;  
+  padding:10px;  
+  margin-left: 120px;
+  margin-top: 2px;
+  color: #CC0000;
+  position:fixed; 
+  top:2%;  
+  z-index:999;  
+  -webkit-border-radius: 6px; -moz-border-radius: 6px
+}
+
+.nbd {
+  font-size: 20px;
+  width:500px;  
+  padding:10px;  
+  margin-left: 120px;
+  margin-top: 2px;
+  color: #009900;
+  position:fixed; 
+  top:2%;  
+  z-index:999;  
+  -webkit-border-radius: 6px; -moz-border-radius: 6px
+}
+
+
 /* Toolbox CSS */
 #toolbox{
 position: absolute;
