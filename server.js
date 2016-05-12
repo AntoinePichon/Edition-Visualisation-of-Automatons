@@ -166,12 +166,12 @@ app.use(express.static(__dirname + '/public/style'));
       
         if (source==0){
           
-          socket.emit('messagelong',"Votre mot est trop long");
-          j=word.length;
+          socket.emit('messageError',"Votre mot est trop long");
+          //j=word.length;
         }
         else if (verif==0){
               //ERREUR : NOEUD D'ERREUR : NOEUD À ID = -1 (TOUCHE POUR L'AJOUTER) 
-              //socket.emit('messageError',"Ce mot n'est pas valable");
+              socket.emit('messageError',"Ce mot n'est pas valable");
               socket.emit('activenodes',activenodes);
               j=word.length;
             }
