@@ -125,6 +125,7 @@ element.addEventListener ('click', function () {
 
 socket.on('already_edit', function(already_edit) {
       $(".alr").text(already_edit);
+      $(".alr").fadeIn('fast');
       $(document).ready(function() {
         setTimeout(function() { 
           $('.alr').fadeOut('slow');
@@ -138,6 +139,7 @@ socket.on('already_edit', function(already_edit) {
 // Lorsqu'on reçoit un signal "nobody_edit" on a l'accès
 socket.on('nobody_edit', function(nobody_edit) {
       $(".nbd").text(nobody_edit);
+      $(".nbd").fadeIn('fast');
       $(document).ready(function() {
         setTimeout(function() { 
           $('.nbd').fadeOut('slow');
@@ -145,6 +147,20 @@ socket.on('nobody_edit', function(nobody_edit) {
       });
   already = false;
   $('#myonoffswitch').attr('checked', true);
+});
+
+socket.on('can_edit', function(message){
+      $(".ced").text(message);
+      $(".ced").fadeIn('fast');
+      $(document).ready(function() {
+        setTimeout(function() { 
+          $('.ced').fadeOut('slow');
+        }, 2000);
+      });
+  
+  //$('#myonoffswitch').attr('checked', true);
+
+// alert(message)
 });
 
 // if check, client can edit else can't
@@ -1187,9 +1203,9 @@ $(document).ready(function(){
   });
 
   socket.on('messageError', function(message) {
-
-
+    
     $(".msgBox").text(message);
+    $(".msgBox").fadeIn('fast');
     $(document).ready(function() {
       setTimeout(function() {
         $('.msgBox').fadeOut('slow');
