@@ -123,9 +123,13 @@ element.addEventListener ('click', function () {
   }
 });
 
-// Lorsqu'on reçoit un signal "already_edit" on n'a pas l'accès
 socket.on('already_edit', function(already_edit) {
-  alert('[SERVER] : ' + already_edit);
+      $(".alr").text(already_edit);
+      $(document).ready(function() {
+        setTimeout(function() { 
+          $('.alr').fadeOut('slow');
+        }, 2000);
+      });
   already = true;
   $('#myonoffswitch').removeAttr('checked');
   checkBox();
@@ -133,7 +137,12 @@ socket.on('already_edit', function(already_edit) {
 
 // Lorsqu'on reçoit un signal "nobody_edit" on a l'accès
 socket.on('nobody_edit', function(nobody_edit) {
-  alert('[SERVER] : ' + nobody_edit);
+      $(".nbd").text(nobody_edit);
+      $(document).ready(function() {
+        setTimeout(function() { 
+          $('.nbd').fadeOut('slow');
+        }, 2000);
+      });
   already = false;
   $('#myonoffswitch').attr('checked', true);
 });
@@ -1179,12 +1188,19 @@ $(document).ready(function(){
 
   socket.on('messageError', function(message) {
 
-  // var motnonvalid=document.getElementById("testWord").value; 
-  // $(".motnonvalid").text(motnonvalid+"   Mot non valide");
-  var tmpWord="";
-  $(".motvalid").text(tmpWord);
 
-});
+    $(".msgBox").text(message);
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('.msgBox').fadeOut('slow');
+
+      }, 2000);
+
+
+  // var tmpWord="";
+  // $(".motvalid").text(tmpWord);
+    });
+  });
 
   socket.on('activenodes', function(activenodes) {
 
