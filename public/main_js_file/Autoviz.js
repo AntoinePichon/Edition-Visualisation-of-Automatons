@@ -310,7 +310,7 @@ if(d3.event.ctrlKey){
 d3.select("#help").on("click", function() {
 
   $(function(){
-    alert('[Controls] :\n -Shift + Click : New Node \n - Shift + Click + Drag : New Edge \n -Shift + Click on a Node : Change Name\'s Node \n  -Alt + Click on a Edge : Change Name\'s Edge \n -Alt + Click on a Node : Self Loop \n -P : Formulaire \n -Suppr : Delete a Node/Edge \n ');
+    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Shift + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Alt + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server');
   });
 });
 
