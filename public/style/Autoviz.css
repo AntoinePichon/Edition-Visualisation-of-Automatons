@@ -90,14 +90,14 @@ box-shadow: inset 12px 0 0 0 #f9f9f9;
   position: absolute;
   bottom: 0;
   left: 0;
-  margin-bottom: 0.5em;
-  margin-left: 18em;
+  margin-bottom: 1em;
+  margin-left: 90.7em;
 
 }
 
 #helpbox input{
-  width: 30px;
-  opacity: 0.4;
+  width: 60px;
+  opacity: 0.78;
 }
 
 #helpbox input:hover{
