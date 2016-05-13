@@ -336,7 +336,7 @@ if(d3.event.ctrlKey){
 d3.select("#help").on("click", function() {
 
   $(function(){
-    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Shift + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Alt + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server');
+    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Alt + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Shift + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server');
   });
 });
 
@@ -785,13 +785,13 @@ GraphCreator.prototype.circleMouseUp = function(d3node, d){
       state.justDragged = false;
     } else{
       // clicked, not dragged
-      if (d3.event.shiftKey){
+      if (d3.event.altKey){
         // shift-clicked node: edit text content
         var d3txt = thisGraph.changeTextOfNode(d3node, d);
         var txtNode = d3txt.node();
         thisGraph.selectElementContents(txtNode);
         txtNode.focus();
-      }else if(d3.event.altKey){
+      }else if(d3.event.shiftKey){
           var newEdge = {source: mouseDownNode, target: mouseDownNode, transition: " NT --->"};         //////   VOIR ICI
           var filtRes = thisGraph.paths.filter(function(d){
             return d.source === newEdge.source && d.target === newEdge.target;
