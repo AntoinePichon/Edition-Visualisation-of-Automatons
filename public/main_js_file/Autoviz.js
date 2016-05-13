@@ -180,6 +180,7 @@ function timerActivity(){
   console.log('Aucune activité');
   if($('#myonoffswitch').is(':checked')){
     socket.emit('return', sig_edit);
+    edit=0;
   }
   $('#myonoffswitch').removeAttr('checked');
  }
