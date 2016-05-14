@@ -147,7 +147,7 @@ io.sockets.on('connection', function (socket) {
       var verif=0;
       var source=0;
       for (var i = 0; i < save1.edges.length; i++) {
-        if(save1.edges[i].source==save1.active) {
+        if(save1.edges[i].source==save1.active && verif==0) {
           source=1;
           //if (save1.edges[i].transition==word.charAt(j)){
           var reg= new RegExp(String(save1.edges[i].transition),"i");
