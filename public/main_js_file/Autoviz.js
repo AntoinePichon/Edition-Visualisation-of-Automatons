@@ -1070,8 +1070,6 @@ GraphCreator.prototype.updateGraph = function(){
   // remove old nodes
   thisGraph.circles.exit().remove();
 
-  console.log("Graph updated !")
-
 };
 
 GraphCreator.prototype.zoomed = function(){
