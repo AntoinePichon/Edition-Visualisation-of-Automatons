@@ -35,6 +35,8 @@ fs.readdir(path, function(err, items) {
     }
   }
   console.log('\n');
+  console.log("You can connect to port " + port);
+  console.log('\n');
 });
 
 // Chargement de socket.io
