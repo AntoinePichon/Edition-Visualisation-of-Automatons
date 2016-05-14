@@ -66,26 +66,41 @@ console.log(message);
 });
 
 socket.on('saved_graph', function(saved_graph){
-graph_available = saved_graph;
-$("ul").remove();
-$("option").remove();
-var ul = document.createElement("ul");
-var select = document.getElementById("select_file");
-for (var i = 0; i < graph_available.length; i++) {
-  var graph_file = document.createTextNode(graph_available[i]);
-  var li = document.createElement("li");
-  li.appendChild(graph_file);
-  ul.appendChild(li);
+  graph_available = saved_graph;
+  $("ul").remove();
+  $("option").remove();
+  var ul = document.createElement("ul");
+  var select = document.getElementById("select_file");
+  for (var i = 0; i < graph_available.length; i++) {
+    var graph_file = document.createTextNode(graph_available[i]);
+    var li = document.createElement("li");
 
-  var graph_file2 = document.createTextNode(graph_available[i]);
-  var option = document.createElement("option");
-  option.appendChild(graph_file2);
-  select.appendChild(option);
-}
+    li.appendChild(graph_file);
+    ul.appendChild(li);
+    ul.setAttribute('id', 'upload');
+    var graph_file2 = document.createTextNode(graph_available[i]);
+    var option = document.createElement("option");
+    option.appendChild(graph_file2);
+    select.appendChild(option);
+  }
 var element = document.getElementById("color-form");
 element.appendChild(ul);
 
+$("ul li").addClass(function( index ) {
+  return "graph-" + index;
 });
+
+});
+
+
+$(function(){
+    $("#color-form").on('click','li',function (){
+        var confirms = confirm('Do you want to upload ' + $(this).html());
+        if(confirms)
+          socket.emit('upload_graph', $(this).html());
+    });
+})
+
 
 // Update saved graph on server
 socket.on('update_saved_graph', function(saved_graph){
@@ -110,8 +125,11 @@ socket.on('update_saved_graph', function(saved_graph){
   var element = document.getElementById("color-form");
   element.appendChild(ul);
 
+  $("ul li").addClass(function( index ) {
+  return "graph-" + index;
 });
 
+});
 
 // Reception of edit messages events
 // Lorsqu'on clique sur le bouton d'édition (de off à on), on émet un sig_edit au serveur
