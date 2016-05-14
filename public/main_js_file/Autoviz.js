@@ -52,7 +52,7 @@ icon.click(function() {
 
 
 // Initialisation communication socket
-var socket = io.connect('http://localhost:8080');
+var socket = io.connect('http://localhost:4567');
 
 socket.emit('new_client', id);
 
