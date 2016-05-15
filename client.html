@@ -64,10 +64,33 @@
     </form>
   </div>
 
-  <div id="word">
+
+
+  <script type="text/javascript">
+  /* Voici la fonction javascript qui change la propriété "display"
+  pour afficher ou non le test regexp selon que ce soit "none" ou "block". */
+
+  function AfficherMasquer()
+  {
+  divInfo = document.getElementById('word');
+
+  if (divInfo.style.display == 'none')
+  divInfo.style.display = 'block';
+  else
+  divInfo.style.display = 'none';
+
+  }
+  </script>
+
+<!-- Bouton permettant d'afficher/masquer le test regexp -->
+<div id="PluginRegexp">
+  <input type="button" value="Regexp" onClick="AfficherMasquer()" />
+</div>
+
+  <div id="word" style="display:none;">
        <label for="testWord" >Mot à tester  </label>
        <input type="text" id="testWord" name="testWord"/>
- 
+
      <div class="button">
        <button id="wordchoice" type="text">Valider le mot</button>
      </div>
