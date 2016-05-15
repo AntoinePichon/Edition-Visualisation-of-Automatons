@@ -548,6 +548,13 @@ GraphCreator.prototype.dragmove = function(d) {
 GraphCreator.prototype.deleteGraph = function(skipPrompt){
   var thisGraph = this,
   doDelete = true;
+    var letter="";
+    $(".lettrevalid").text(letter);
+    var motnonvalid="";
+    $(".motnonvalid").text(motnonvalid);
+    graph.changeActCol('#00BFFF');
+    var badletter = "";
+    $(".lettrevalid").text(badletter);
   if (!skipPrompt){
     doDelete = window.confirm("Press OK to delete this graph");
   }
