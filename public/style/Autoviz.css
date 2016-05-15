@@ -358,11 +358,23 @@ bottom: 1;
 right: 0;
 
 margin-right: 20px;
-margin-top: 20px;
+margin-top: 50px;
 border: 2px solid #EEEEEE;
 border-radius: 5px;
 padding: 1em;
+background-color: rgb(248, 248, 248);
+}
 
+
+#PluginRegexp{
+
+  position absolute;
+  bottom: 1;
+  right: 0;
+  margin-right: 20px;
+  margin-top:10px;
+  padding: 1em;
+  background-color: rgb(248, 248, 248);
 }
 
 /* Confirmation sauvegarde fichier */
