@@ -38,8 +38,28 @@
   </div>
 
 
+<script type="text/javascript">
+  /* Voici la fonction javascript qui change la propriété "display"
+  pour afficher ou non le test regexp selon que ce soit "none" ou "block". */
+
+  function Display()
+  {
+  divInfo = document.getElementById('color-form');
+
+  if (divInfo.style.display == 'none')
+  divInfo.style.display = 'block';
+  else
+  divInfo.style.display = 'none';
+
+  }
+  </script>
+
+  <div id="Form_Button">
+    <input type="button" value="Form" onClick="Display()" />
+  </div>
+
 <!-- Formulaire d'édition -->
-  <div id="color-form">
+  <div id="color-form" style="display:none;">
     <form action="" method="post">
       <div>
         <label for="nodeColor" >Couleur des noeuds :</label>
