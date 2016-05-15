@@ -1164,7 +1164,7 @@ if(automate == 0){
   var active = 0;
   var nodes = [{title: "0", id: 0, x: xLoc, y: yLoc},
   {title: "1", id: 1, x: xLoc, y: yLoc + 200}];
-  var edges = [{source: nodes[1], target: nodes[0], transition: "NO"}];    ////// VOIR ICI
+  var edges = [{source: nodes[0], target: nodes[1], transition: "NO"}];    ////// VOIR ICI
 }
 
 /** MAIN SVG **/
