@@ -105,7 +105,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('Graphe_connect', function(blob) {
     if(save == 0){
       save = String(blob);
-    } // console.log('[SERVER] Graph charged\n');
+   } //console.log('[SERVER] Graph charged' + save);
     io.emit('Graphe_connect', save);
   });
 
@@ -137,18 +137,25 @@ io.sockets.on('connection', function (socket) {
     });
   });
 
+  socket.on('get_graph', function(graph){
+    var graph = save;
+    socket.emit('get_graph', save);
+  })
+
   socket.on('sendWord', function(testWord){
     var word=testWord;
     var tab = [];
     var activenodes= [];
     activenodes[0]=0;
+
     save1 = JSON.parse(save);
+    
     for (var j=0; j<word.length; j++){
       var verif=0;
-      var source=0;
+      console.log(save1.init);
       for (var i = 0; i < save1.edges.length; i++) {
         if(save1.edges[i].source==save1.active && verif==0) {
-          source=1;
+      
           //if (save1.edges[i].transition==word.charAt(j)){
           var reg= new RegExp(String(save1.edges[i].transition),"i");
           // console.log('[SERVER] Character n°' + j + ' : ' + reg.test(word.charAt(j))); 
@@ -160,7 +167,7 @@ io.sockets.on('connection', function (socket) {
           }
         }
       };
-      if (source==0 || verif==0) {
+      if (verif==0) {
         socket.emit('messageError',"Invalid word, please try another one");
         socket.emit('activenodes',activenodes);
         j=word.length;
@@ -171,6 +178,7 @@ io.sockets.on('connection', function (socket) {
     if (tab.length==word.length) {
       // console.log('[SERVER] Comparition done \n');
       socket.emit('activenodes',activenodes);
+
     }
   });
 });
