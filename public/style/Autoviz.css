@@ -339,7 +339,7 @@ fill: rgb(200, 238, 241);
 }
 
 g.selected circle{
-fill: rgb(250, 232, 255);
+fill: rgb(250, 232, 255) !important;
 }
 g.selected:hover circle{
 fill: rgb(250, 232, 255);
@@ -487,7 +487,6 @@ fill:  orange;
 border-radius: 2px;
 border-color: black;
 }
-
 g.active circle{
 fill:   #00BFFF;
 }
