@@ -100,7 +100,7 @@ io.sockets.on('connection', function (socket) {
 // Sauvegarde le graph en .json après demande du titre
   socket.on('new_graph', function(graph){
     var Graphs = [];
-    current_graph_title = graph.title;
+    current_graph_title = graph.title + '.json';
     save = 0;
     console.log('[SERVER] Graph saved (JSON file)\n');
     fs.writeFile('./Graphs/' + graph.title + '.json', graph.content);
@@ -126,7 +126,7 @@ io.sockets.on('connection', function (socket) {
     save = String(blob);
     fs.writeFile('./Graphs/' + current_graph_title + '.json', blob);
     socket.broadcast.emit('Graphe_five', save);
-    // console.log('[SERVER] Graph broadcasted to others clients \n');
+    console.log('[SERVER] Graph broadcasted to others clients and saved\n');
   });
 
   // Lors d'un rafraichissement, charge save si != 0
@@ -156,6 +156,7 @@ io.sockets.on('connection', function (socket) {
 */
   
   socket.on('upload_graph', function(file_name){
+    current_graph_title = file_name;
     console.log('[SERVER] Uploading ' + file_name + '\n');
     fs.readFile('./Graphs/' + file_name, 'utf8', function (err, data) {
       if (err) throw err;
