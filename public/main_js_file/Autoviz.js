@@ -611,6 +611,7 @@ GraphCreator.prototype.insertTrans = function (gEl, d) {
   var el = gEl.append("text")
   .attr("class", "a" +String(d.source.id) + "" + String(d.target.id)+"" )
   .attr("fill", "grey")
+  .attr("font-size","30px")
   .attr("dy", -4)
   .append("textPath")
   .attr("startOffset", "36%")
@@ -1246,7 +1247,6 @@ $(document).ready(function(){
 
   // });
 });
-
 
   //submit test Word
   document.getElementById('wordchoice').onclick = function(){
