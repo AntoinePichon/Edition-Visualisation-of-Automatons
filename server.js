@@ -142,7 +142,7 @@ io.sockets.on('connection', function (socket) {
     socket.emit('get_graph', save);
   })
 
-socket.on('sendWord', function(testWord){
+  socket.on('sendWord', function(testWord){
     var word=testWord;
     console.log(word);
     var tab = [];
@@ -188,4 +188,3 @@ word="";
 });
 
 server.listen(port);
-
