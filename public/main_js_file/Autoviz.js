@@ -870,13 +870,13 @@ GraphCreator.prototype.textMouseUp = function(d3node, d){
   consts = thisGraph.consts;
 
 
-  if (d3.event.altKey){
+  //if (d3.event.altKey){
         // shift-clicked node: edit text content
         var d3txt = thisGraph.changeTextOfTextPath(d3node, d);
         var txtNode = d3txt.node();
         thisGraph.selectElementContents(txtNode);
         txtNode.focus();
-      }
+      //}
 
       return;
 
