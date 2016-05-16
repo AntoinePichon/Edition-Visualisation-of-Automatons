@@ -172,18 +172,25 @@ io.sockets.on('connection', function (socket) {
       };
       if (verif==0) {
         socket.emit('messageError',"Invalid word, please try another one");
-        socket.emit('activenodes',activenodes);
+        socket.emit('activenodes',{ 'activenodes': activenodes , 'color': 'red' });
         j=word.length;
       } 
       //ERREUR : NOEUD D'ERREUR : NOEUD À ID = -1 (TOUCHE POUR L'AJOUTER)
     };
     console.log('[SERVER] Regular expresion path activated nodes : ' + activenodes + '\n');
     if (tab.length==word.length) {
+
+      if(save1.finals.indexOf(save1.active)!=-1){
       // console.log('[SERVER] Comparition done \n');
-      socket.emit('activenodes',activenodes);
-word="";
+      socket.emit('activenodes',{ 'activenodes': activenodes , 'color': '#32CD32' });
+    word="";
     }
-    
+    else{
+      socket.emit('messageErrorFinal',"The last state is not a final state");
+      socket.emit('activenodes',{ 'activenodes': activenodes , 'color': 'red' });
+      word="";
+    }
+    }
   });
 });
 
