@@ -10,6 +10,7 @@ var active = Math.floor(Math.random()*5);
 var random;
 var saved_graph = [];
 var upload_graph;
+var current_graph_title;
 var port = 4567;
 
 //  Chargement du fichier index.html affiché au client
@@ -45,8 +46,10 @@ var j=0;
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
+  socket.emit('connect', 'Hello dear client! \nChoose a title for your graph !');
   socket.emit('message', socket.id);
   socket.emit('saved_graph',saved_graph);
+  
   socket.on('new_client', function(){
     console.log('[SERVER] New client binded on port ' + port + ', id = ' + id + '\n');
     socket.id = id;
@@ -93,10 +96,35 @@ io.sockets.on('connection', function (socket) {
       io.emit('update_saved_graph', saved_graph);
     });
   });
+  
+// Sauvegarde le graph en .json après demande du titre
+  socket.on('new_graph', function(graph){
+    var Graphs = [];
+    current_graph_title = graph.title;
+    save = 0;
+    console.log('[SERVER] Graph saved (JSON file)\n');
+    fs.writeFile('./Graphs/' + graph.title + '.json', graph.content);
+    console.log(graph.content);
+    Graphs.push(graph.title + '.json');
+    // Récupérer fichier .json stocké côté serveur
+    saved_graph = [];
+    fs.readdir(path, function(err, items) {
+      for (var i=0; i<items.length; i++) {
+        if (items[i].indexOf(".json") >= 0){
+          saved_graph.push(items[i]);
+          console.log(items[i]);
+        }
+      }
+      io.emit('update_saved_graph', saved_graph);
+    });
+  });
+
 
   //Update save toutes les 5 sec pour les clients qui n'ont pas accès à l'édition
+  // Save le graph toute les 5sec
   socket.on('Graphe_five', function(blob){
     save = String(blob);
+    fs.writeFile('./Graphs/' + current_graph_title + '.json', blob);
     socket.broadcast.emit('Graphe_five', save);
     // console.log('[SERVER] Graph broadcasted to others clients \n');
   });
