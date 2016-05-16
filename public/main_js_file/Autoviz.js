@@ -1247,6 +1247,7 @@ $(document).ready(function(){
   // });
 });
 
+
   //submit test Word
   document.getElementById('wordchoice').onclick = function(){
     
@@ -1262,12 +1263,11 @@ $(document).ready(function(){
     socket.emit('sendWord',testWord);
     // graph.changeActiveNode(0);
     var letter="";
-    $(".lettrevalid").text(letter);
+    $(".lettrevalid").empty();
     var motnonvalid="";
-    $(".motnonvalid").text(motnonvalid);
+    $(".motnonvalid").empty();
     graph.changeActCol('#00BFFF');
     var badletter = "";
-    $(".lettrevalid").text(badletter);
     
     
 
@@ -1322,7 +1322,7 @@ $(document).ready(function(){
       letter=testWord;
       $(".lettrevalid").css('color','#32CD32');
       $(".lettrevalid").text(letter);
-
+      $(".motnonvalid").empty();
       graph.changeActCol('#32CD32');
       
     }
