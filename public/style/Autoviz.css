@@ -477,6 +477,16 @@ fill: #F6FBFF;
 stroke: #333;
 stroke-width: 2px;
 }
+g.init circle{
+fill:  grey;
+border-radius: 2px;
+border-color: black;
+}
+g.finals circle{
+fill:  orange;
+border-radius: 2px;
+border-color: black;
+}
 
 g.active circle{
 fill:   #00BFFF;
