@@ -100,6 +100,7 @@ $(function(){
         var confirms = confirm('Do you want to upload ' + $(this).html());
         if(confirms)
           socket.emit('upload_graph', $(this).html());
+          $('.title').text($(this).html());
     });
 })
 
