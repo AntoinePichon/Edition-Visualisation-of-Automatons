@@ -216,7 +216,7 @@ var automate = 0;
 
 
 // define graphcreator object
-var GraphCreator = function(svg, nodes, edges, active, init, automate){
+var GraphCreator = function(svg, nodes, edges, active, init, finals, automate){
   var thisGraph = this;
   thisGraph.idct = 0;
 
@@ -225,6 +225,7 @@ var GraphCreator = function(svg, nodes, edges, active, init, automate){
   thisGraph.edges = edges || [];
   thisGraph.active = active;
   thisGraph.init = init;
+  thisGraph.finals= finals || [];
 
   thisGraph.state = {
     selectedNode: null,
@@ -335,7 +336,7 @@ var GraphCreator = function(svg, nodes, edges, active, init, automate){
     thisGraph.edges.forEach(function(val, i){
       saveEdges.push({source: val.source.id, target: val.target.id, transition: thisGraph.edges[i].transition });   //////// HERE
     });
-    var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
+    var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
 
 if(d3.event.ctrlKey){
   saveAs(blob, "mydag.json");
@@ -356,7 +357,7 @@ if(d3.event.ctrlKey){
 d3.select("#help").on("click", function() {
 
   $(function(){
-    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Alt + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Shift + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server');
+    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Alt + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Shift + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server \n --> I on a selected Node to force Initial State \n --> F on a selected Node to force Final State and F on the same node to remove Final State');
   });
 });
 
@@ -366,7 +367,7 @@ d3.select("#help").on("click", function() {
     thisGraph.edges.forEach(function(val, i){
       saveEdges.push({source: val.source.id, target: val.target.id, transition: thisGraph.edges[i].transition });   //////// HERE
     });
-   var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
+   var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
     socket.emit('Graphe_connect', blob);
 
   };
@@ -377,7 +378,7 @@ d3.select("#help").on("click", function() {
     thisGraph.edges.forEach(function(val, i){
       saveEdges.push({source: val.source.id, target: val.target.id, transition: thisGraph.edges[i].transition });   //////// HERE
     });
-    var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
+    var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
     if(edit == 1){
       socket.emit('Graphe_five', blob);}}  , 5000);
 
@@ -402,6 +403,7 @@ d3.select("#help").on("click", function() {
                      });
         thisGraph.edges = newEdges;
         thisGraph.init=automate.init;
+        thisGraph.finals=automate.finals;
         thisGraph.active = automate.active;
       }
     }});
@@ -425,6 +427,7 @@ d3.select("#help").on("click", function() {
                        });
       thisGraph.edges = newEdges;
       thisGraph.init = automate.init;
+      thisGraph.finals = automate.finals;
       thisGraph.active = automate.active;
     }
   });
@@ -455,6 +458,7 @@ d3.select("#help").on("click", function() {
            var jsonObj = JSON.parse(txtRes);
            thisGraph.deleteGraph(true);
            thisGraph.init = jsonObj.init;
+           thisGraph.finals = jsonObj.finals;
            thisGraph.active = jsonObj.active;
            thisGraph.nodes = jsonObj.nodes;
            if( thisGraph.nodes.x == "" || thisGraph.nodes.y == ""){
@@ -526,6 +530,7 @@ GraphCreator.prototype.setIdCt = function(idct){
 GraphCreator.prototype.consts =  {
   selectedClass: "selected",
   initClass : "init",
+  finalsClass : "finals",
   activeClass: "active",
   connectClass: "connect-node",
   circleGClass: "conceptG",
@@ -836,9 +841,17 @@ GraphCreator.prototype.circleMouseUp = function(d3node, d){
             thisGraph.updateGraph();
             thisGraph.updateGraph();
           }
-          }else if(d3.event.ctrlKey){
-        
+          }else if(d3.event.keyCode == 73){
+        alert("P");
         thisGraph.changeInitNode(d.id);
+        
+        
+
+        thisGraph.updateGraph();
+        } 
+        else if(d3.event.ctrlKey){
+        alert("P");
+        thisGraph.changeFinalNode(d.id);
         
         
 
@@ -870,7 +883,7 @@ GraphCreator.prototype.textMouseUp = function(d3node, d){
   consts = thisGraph.consts;
 
 
-  //if (d3.event.altKey){
+  // if (d3.event.altKey){
         // shift-clicked node: edit text content
         var d3txt = thisGraph.changeTextOfTextPath(d3node, d);
         var txtNode = d3txt.node();
@@ -908,6 +921,32 @@ GraphCreator.prototype.changeInitNode = function(init){
 
     thisGraph.init = init;
 
+
+  thisGraph.updateGraph();
+};
+
+GraphCreator.prototype.changeFinalNode = function(finals){
+    var thisGraph = this;
+
+    thisGraph.finals = finals;
+
+
+  thisGraph.updateGraph();
+};
+
+GraphCreator.prototype.addFinalNode = function(finalToAdd){
+    var thisGraph = this;
+
+    thisGraph.finals.push(finalToAdd);
+
+  thisGraph.updateGraph();
+};
+
+
+GraphCreator.prototype.removeFinalNode = function(finalToRem){
+    var thisGraph = this;
+    var index = thisGraph.finals.indexOf(finalToRem);
+    thisGraph.finals.splice(index,1);
 
   thisGraph.updateGraph();
 };
@@ -967,6 +1006,25 @@ GraphCreator.prototype.svgKeyDown = function() {
       state.selectedEdge = null;
       thisGraph.updateGraph();
       thisGraph.updateGraph();  // remove transition
+    }
+    break;
+    case 70:
+    d3.event.preventDefault();
+    if (selectedNode){
+      if(thisGraph.finals.indexOf(selectedNode.id)==-1){
+      thisGraph.addFinalNode(selectedNode.id);
+    console.log(thisGraph.finals);
+  }
+    else{
+      thisGraph.removeFinalNode(selectedNode.id);
+      console.log(thisGraph.finals);
+    }
+    }
+    break;
+    case 73:
+    d3.event.preventDefault();
+    if (selectedNode){
+      thisGraph.changeInitNode(selectedNode.id);
     }
     break;
   }
@@ -1072,6 +1130,15 @@ GraphCreator.prototype.updateGraph = function(){
     }else {
       return false;}
     })
+   .classed(consts.finalsClass, function(d){
+    var test = false;
+    for (var i = 0; i < thisGraph.finals.length; i++) {
+      if( d.id == thisGraph.finals[i]){
+        test= true;
+      }
+    };
+    return test;
+    })
   .classed(consts.activeClass, function(d){
     if( d.id == thisGraph.active){
       return true;
@@ -1097,6 +1164,15 @@ GraphCreator.prototype.updateGraph = function(){
       return false;
     }
   })
+   .classed(consts.finalsClass, function(d){
+    var test = false;
+    for (var i = 0; i < thisGraph.finals.length; i++) {
+      if( d.id == thisGraph.finals[i]){
+        test= true;
+      }
+    };
+    return test;
+    })
   .classed(consts.activeClass, function(d){
     if( d.id == thisGraph.active){
       return true;
@@ -1153,7 +1229,7 @@ GraphCreator.prototype.updateWindow = function(svg){
 };
 
 // Change values in CSS
-GraphCreator.prototype.changeIt = function (activecolor, nodecolor, transcolor, noderadius) {
+GraphCreator.prototype.changeIt = function (activecolor,initcolor, finalscolor, nodecolor, transcolor, noderadius) {
   var thisGraph = this,
   consts = thisGraph.consts;
 
@@ -1164,8 +1240,10 @@ GraphCreator.prototype.changeIt = function (activecolor, nodecolor, transcolor, 
   else if (document.styleSheets[0].rules)
     theRules = document.styleSheets[0].rules
   else return;
-  theRules[theRules.length-3].style.stroke = transcolor;
-  theRules[theRules.length-2].style.fill = nodecolor;
+  theRules[theRules.length-5].style.stroke = transcolor;
+  theRules[theRules.length-4].style.fill = nodecolor;
+  theRules[theRules.length-3].style.fill = initcolor;
+  theRules[theRules.length-2].style.fill = finalscolor;
   theRules[theRules.length-1].style.fill = activecolor;
   consts.nodeRadius = noderadius;
 }
@@ -1204,6 +1282,7 @@ yLoc = 100;
 if(automate == 0){
   var init =0;
   var active = init;
+  var finals=[];
 
   var nodes = [{title: "0", id: 0, x: xLoc, y: yLoc},
   {title: "1", id: 1, x: xLoc, y: yLoc + 200}];
@@ -1214,7 +1293,7 @@ if(automate == 0){
 var svg = d3.select("body").append("svg")
 .attr("width", width)
 .attr("height", height);
-var graph = new GraphCreator(svg, nodes, edges, active, init, automate);
+var graph = new GraphCreator(svg, nodes, edges, active, init, finals, automate);
 graph.setIdCt(2);
 
 graph.updateGraph();
@@ -1230,7 +1309,7 @@ d3.timer( function(){graph.updateGraph()});
 $(document).ready(function(){
 
   document.getElementById('choices').onclick = function(){
-    graph.changeIt($('#activeColor').val(), $('#nodeColor').val(), $('#transColor').val(), $('#nodeRadius').val());
+    graph.changeIt($('#activeColor').val(), 'grey', 'orange', $('#nodeColor').val(), $('#transColor').val(), $('#nodeRadius').val());
     $("#color-form").css('display', 'none');
   }
 
@@ -1293,6 +1372,23 @@ $(document).ready(function(){
     });
   });
 
+ socket.on('messageErrorFinal', function(message) {
+    
+    $(".msgBox").text(message);
+    $(".msgBox").fadeIn('fast');
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('.msgBox').fadeOut('slow');
+
+      }, 2000);
+
+
+  // var tmpWord="";
+  // $(".motvalid").text(tmpWord);
+    });
+  });
+
+
   socket.on('activenodes', function(activenodes) {
 
 
@@ -1307,9 +1403,9 @@ $(document).ready(function(){
    $(document).ready(function() {
     var icon = $('.play');
     icon.click(function() {
-      if(activenodes.length-1==testWord.length){
+      if(activenodes.activenodes.length-1==testWord.length){
         if(i<testWord.length+1){
-          graph.changeActiveNode(activenodes[i]);
+          graph.changeActiveNode(activenodes.activenodes[i]);
 
           tmpWord=tmpWord.substring(1,tmpWord.length);
           $(".motvalid").text(tmpWord);
@@ -1323,18 +1419,18 @@ $(document).ready(function(){
       $(".lettrevalid").css('color','#32CD32');
       $(".lettrevalid").text(letter);
       $(".motnonvalid").empty();
-      graph.changeActCol('#32CD32');
+      graph.changeActCol(activenodes.color);
       
     }
   }
 }
 else {
     console.log(i);
-    console.log(activenodes.length);
-  if(i<activenodes.length+1){
-    graph.changeActiveNode(activenodes[i]);
+    console.log(activenodes.activenodes.length);
+  if(i<activenodes.activenodes.length+1){
+    graph.changeActiveNode(activenodes.activenodes[i]);
       
-    if(i<activenodes.length){
+    if(i<activenodes.activenodes.length){
     tmpWord=tmpWord.substring(1,tmpWord.length);
     $(".motvalid").text(tmpWord);
     letter=testWord.substring(0,i);
@@ -1342,7 +1438,7 @@ else {
 } 
   
     else {
-      graph.changeActiveNode(activenodes[i-1]);
+      graph.changeActiveNode(activenodes.activenodes[i-1]);
     
     tmpWord=tmpWord.substring(1,tmpWord.length);
     $(".motvalid").text(tmpWord);
@@ -1350,7 +1446,7 @@ else {
     $(".motnonvalid").text(badletter);
     $(".lettrevalid").text(letter);
     //i++;
-      graph.changeActCol('#FF0000');
+      graph.changeActCol(activenodes.color);
     }
     i++;
   }
