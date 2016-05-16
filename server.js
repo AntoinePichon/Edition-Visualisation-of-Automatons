@@ -142,18 +142,21 @@ io.sockets.on('connection', function (socket) {
     socket.emit('get_graph', save);
   })
 
-  socket.on('sendWord', function(testWord){
+socket.on('sendWord', function(testWord){
     var word=testWord;
+    console.log(word);
     var tab = [];
     var activenodes= [];
     activenodes[0]=0;
 
     save1 = JSON.parse(save);
-    
+    save1.active = save1.init;
     for (var j=0; j<word.length; j++){
+
       var verif=0;
-      console.log(save1.init);
+      console.log(save1.init + " Init");
       for (var i = 0; i < save1.edges.length; i++) {
+        console.log(save1.active + " Active")
         if(save1.edges[i].source==save1.active && verif==0) {
       
           //if (save1.edges[i].transition==word.charAt(j)){
@@ -178,9 +181,11 @@ io.sockets.on('connection', function (socket) {
     if (tab.length==word.length) {
       // console.log('[SERVER] Comparition done \n');
       socket.emit('activenodes',activenodes);
-
+word="";
     }
+    
   });
 });
 
 server.listen(port);
+
