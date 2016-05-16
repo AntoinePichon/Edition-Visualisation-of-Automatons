@@ -7,6 +7,7 @@ var time = 10000;
 var graph_available = [];
 var element = document.getElementById('myonoffswitch');
 var sig_edit = 0;
+var title;
 
 // Confirmation when saving file
 function doConfirm(id, msg, yesFn, noFn) {
@@ -369,6 +370,12 @@ d3.select("#help").on("click", function() {
     });
    var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
     socket.emit('Graphe_connect', blob);
+    
+    socket.on('connect', function(message){
+      title = prompt(message);
+      socket.emit('new_graph', {title: title , content : blob });
+      $('.title').text(title + '.json');
+    })
 
   };
 
@@ -519,7 +526,13 @@ d3.select("#help").on("click", function() {
 
   // handle delete graph
   d3.select("#delete-graph").on("click", function(){
-    thisGraph.deleteGraph(false);
+    if(edit == 1){
+      thisGraph.deleteGraph(false);
+      title = prompt('Choose a title for this new graph !');
+      $('.title').text(title + '.json');
+      socket.emit('new_graph', {title: title , content : 0 });
+    }
+
   });
 };
 
