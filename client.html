@@ -84,14 +84,13 @@
   </div>
 
 
-
   <script type="text/javascript">
   /* Voici la fonction javascript qui change la propriété "display"
   pour afficher ou non le test regexp selon que ce soit "none" ou "block". */
 
-  function AfficherMasquer()
+  function AfficherMasquer(id)
   {
-  divInfo = document.getElementById('word');
+  divInfo = document.getElementById(String(id));
 
   if (divInfo.style.display == 'none')
   divInfo.style.display = 'block';
@@ -103,7 +102,7 @@
 
 <!-- Bouton permettant d'afficher/masquer le test regexp -->
 <div id="PluginRegexp">
-  <input type="button" value="Regexp" onClick="AfficherMasquer()" />
+  <input type="button" value="Regexp" onClick="AfficherMasquer('word')" />
 </div>
 
   <div id="word" style="display:none;">
@@ -120,6 +119,13 @@
     </div>
 
   </div>
+
+  <div id="List_graph">
+  <input type="button" value="Graphs" onClick="AfficherMasquer('list_graph')" />
+</div>
+
+
+  <div id="list_graph" style="display:none;"></div>
 
 <div class="msgBox"></div>
 <div class="alr"></div>
