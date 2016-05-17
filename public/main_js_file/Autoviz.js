@@ -138,9 +138,11 @@ socket.on('update_saved_graph', function(saved_graph){
 // Lorsqu'on clique sur le bouton d'édition (de off à on), on émet un sig_edit au serveur
 element.addEventListener ('click', function () {
   if($('#myonoffswitch').is(':checked')){
-    socket.emit('ack_edit', sig_edit);
-  }else{
     socket.emit('return', sig_edit);
+    //socket.emit('ack_edit', sig_edit);
+  }else{
+    socket.emit('ack_edit', sig_edit);
+    //socket.emit('return', sig_edit);
   }
 });
 
@@ -157,6 +159,18 @@ socket.on('already_edit', function(already_edit) {
   checkBox();
 });
 
+socket.on('you_edit',function(you_edit){
+        $(".nbd").text(you_edit);
+      $(".nbd").fadeIn('fast');
+      $(document).ready(function() {
+        setTimeout(function() { 
+          $('.nbd').fadeOut('slow');
+        }, 2000);
+      });
+  already = false;
+  $('#myonoffswitch').attr('checked', true);
+  checkBox();
+});
 // Lorsqu'on reçoit un signal "nobody_edit" on a l'accès
 socket.on('nobody_edit', function(nobody_edit) {
       $(".nbd").text(nobody_edit);
@@ -168,6 +182,8 @@ socket.on('nobody_edit', function(nobody_edit) {
       });
   already = false;
   $('#myonoffswitch').attr('checked', true);
+  $('#myonoffswitch').click();
+  checkBox();
 });
 
 socket.on('can_edit', function(message){
@@ -183,6 +199,13 @@ socket.on('can_edit', function(message){
 
 // alert(message)
 });
+
+window.onclick = function(){
+  if(edit == 0){
+    socket.emit('ack_edit', sig_edit);
+    console.log('yes');
+  }
+}
 
 // if check, client can edit else can't
 function checkBox(){
