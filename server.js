@@ -52,10 +52,11 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('new_client', function(){
     console.log('[SERVER] New client binded on port ' + port + ', id = ' + id + '\n');
-    //socket.id = id;
+    socket.id = id;
     socket.emit('id',id);
     id++;
   })
+
 
   // Mise en place d'un verrou pour protéger l'accès à un graphe déjà en cours d'édition
   // Si on reçoit un signal "sig_edit" on regarde la valeur de isLocked pour donner ou non l'accès en édition
@@ -65,9 +66,9 @@ io.sockets.on('connection', function (socket) {
       socket.emit('nobody_edit', 'Edition allowed : you have the edition token');
       lock = socket.id;
 
-    }else if(lock == socket.id){
+/*    }else if(lock == socket.id){
       socket.emit('you_edit', 'You already have the edition');
-    } else {
+*/    } else {
       socket.emit('already_edit','Edition refused : another client is editing this graph');
     }
     sig_edit = 0;
@@ -127,9 +128,9 @@ io.sockets.on('connection', function (socket) {
   // Save le graph toute les 5sec
   socket.on('Graphe_five', function(blob){
     save = String(blob);
-    fs.writeFile('./Graphs/' + current_graph_title + '.json', blob);
+    fs.writeFile('./Graphs/' + current_graph_title, blob);
     socket.broadcast.emit('Graphe_five', save);
-    console.log('[SERVER] Graph broadcasted to others clients and saved\n');
+    console.log('[SERVER] Graph broadcasted to others clients and saved \n');
   });
 
   // Lors d'un rafraichissement, charge save si != 0
@@ -137,7 +138,7 @@ io.sockets.on('connection', function (socket) {
     if(save == 0){
       save = String(blob);
    } //console.log('[SERVER] Graph charged' + save);
-    io.emit('Graphe_connect', save);
+    io.emit('Graphe_connect', {title: current_graph_title, blob:save});
   });
 
   socket.on('uploaded', function(blob){
@@ -165,7 +166,7 @@ io.sockets.on('connection', function (socket) {
       if (err) throw err;
       upload_graph = data;
       console.log(upload_graph);
-      io.emit('Graphe_connect', upload_graph);
+      io.emit('Graphe_connect', {title:file_name, blob:upload_graph});
     });
   });
 
