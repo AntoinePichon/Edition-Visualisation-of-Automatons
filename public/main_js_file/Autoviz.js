@@ -85,7 +85,7 @@ socket.on('saved_graph', function(saved_graph){
     option.appendChild(graph_file2);
     select.appendChild(option);
   }
-var element = document.getElementById("color-form");
+var element = document.getElementById("list_graph");
 element.appendChild(ul);
 
 $("ul li").addClass(function( index ) {
@@ -96,7 +96,7 @@ $("ul li").addClass(function( index ) {
 
 
 $(function(){
-    $("#color-form").on('click','li',function (){
+    $("#list_graph").on('click','li',function (){
         var confirms = confirm('Do you want to upload ' + $(this).html());
         if(confirms)
           socket.emit('upload_graph', $(this).html());
@@ -125,7 +125,7 @@ socket.on('update_saved_graph', function(saved_graph){
     option.appendChild(graph_file2);
     select.appendChild(option);
   }
-  var element = document.getElementById("color-form");
+  var element = document.getElementById("list_graph");
   element.appendChild(ul);
 
   $("ul li").addClass(function( index ) {
@@ -138,11 +138,9 @@ socket.on('update_saved_graph', function(saved_graph){
 // Lorsqu'on clique sur le bouton d'édition (de off à on), on émet un sig_edit au serveur
 element.addEventListener ('click', function () {
   if($('#myonoffswitch').is(':checked')){
-    socket.emit('return', sig_edit);
-    //socket.emit('ack_edit', sig_edit);
-  }else{
     socket.emit('ack_edit', sig_edit);
-    //socket.emit('return', sig_edit);
+  }else{
+    socket.emit('return', sig_edit);
   }
 });
 
@@ -182,7 +180,6 @@ socket.on('nobody_edit', function(nobody_edit) {
       });
   already = false;
   $('#myonoffswitch').attr('checked', true);
-  $('#myonoffswitch').click();
   checkBox();
 });
 
@@ -200,12 +197,12 @@ socket.on('can_edit', function(message){
 // alert(message)
 });
 
-window.onclick = function(){
+/*window.onclick = function(){
   if(edit == 0){
     socket.emit('ack_edit', sig_edit);
     console.log('yes');
   }
-}
+}*/
 
 // if check, client can edit else can't
 function checkBox(){
@@ -363,26 +360,38 @@ var GraphCreator = function(svg, nodes, edges, active, init, finals, automate){
     });
     var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
 
-if(d3.event.ctrlKey){
-  saveAs(blob, "mydag.json");
-}else{
+//if(d3.event.ctrlKey){
+  title =$('.title').text();
+  saveAs(blob, title);
+// }else{
 
-    $(function () {
-        doConfirm("#confirmBox", "Voulez vous créer un nouveau fichier JSON ?", function yes() {
-          socket.emit('Graphe_save', {content: blob, new: 'yes' });
-        }, function no() {
-          socket.emit('Graphe_save', {content: blob, new: 'no' });
-        });
-    });
+//     $(function () {
+//         doConfirm("#confirmBox", "Voulez vous créer un nouveau fichier JSON ?", function yes() {
+//           socket.emit('Graphe_save', {content: blob, new: 'yes' });
+//         }, function no() {
+//           socket.emit('Graphe_save', {content: blob, new: 'no' });
+//         });
+//     });
 
-}
+// }
   });
 
 // Handle Help Button
 d3.select("#help").on("click", function() {
 
   $(function(){
-    alert('                                                   [Controls] \n \n \n --> Shift + Click : New Node \n --> Shift + Click + Drag : New Edge \n --> Alt + Click on a Node : Change Name\'s Node \n --> Alt + Click on a Edge : Change Name\'s Edge \n --> Shift + Click on a Node : Self Loop \n --> P : Form/Graphs\'s List \n --> Suppr : Delete a Node/Edge selected \n --> Ctrl + Click on download : Send Current Graph to the Server  \n --> Ctrl + Click on upload : Upload a graph from your computer to the Server \n --> I on a selected Node to force Initial State \n --> F on a selected Node to force Final State and F on the same node to remove Final State');
+    alert('                                                   [Controls] \n \n \n' +
+      '--> Shift + Click : New Node \n' + 
+      '--> Shift + Click + Drag : New Edge \n' + 
+      '--> Shift + Click on a Node : Self Loop \n\n' +
+
+      '--> Alt + Click on a Node : Change Name\'s Node \n' + 
+      '--> Alt + Click on a Edge : Change Name\'s Edge \n\n' + 
+
+      '--> Click : On a node/edge to select it \n'+ 
+      '--> Suppr : Delete a Node/Edge selected \n'+
+      '--> I on a selected Node to force Initial State \n'+
+      '--> F on a selected Node to force Final State and F on the same node to remove Final State');
   });
 });
 
@@ -396,10 +405,12 @@ d3.select("#help").on("click", function() {
     socket.emit('Graphe_connect', blob);
     
     socket.on('connect', function(message){
-      title = prompt(message);
+      title = prompt('Please choose a title for your graph :');
+      if(title != null){
       socket.emit('new_graph', {title: title , content : blob });
       $('.title').text(title + '.json');
-    })
+      }
+      });
 
   };
 
@@ -441,7 +452,8 @@ d3.select("#help").on("click", function() {
 
   // Communication à la connection
   socket.on('Graphe_connect', function(msg){
-    automate = msg;
+    $('.title').text(msg.title);
+    automate = msg.blob;
     console.log(automate);
     automate = JSON.parse(automate);
     console.log(automate.active);
@@ -466,17 +478,16 @@ d3.select("#help").on("click", function() {
 
   // handle uploaded data
    d3.select("#upload-input").on("click", function(){
-     if(d3.event.ctrlKey){
+ /*    if(d3.event.ctrlKey){
        $(function () {
          doConfirmLoad("#uploadGraph", "Quelle fichier voulez-vous charger ?", function load() {
            var file = $("#select_file :selected").text();
            socket.emit('upload_graph', file);
          }, function cancel(){ });
        });
-     }else{
+     }else{*/
        document.getElementById("hidden-file-upload").click();
-     }
-   });
+     });
    d3.select("#hidden-file-upload").on("change", function(){
      if (window.File && window.FileReader && window.FileList && window.Blob) {
        var uploadFile = this.files[0];
@@ -798,17 +809,17 @@ GraphCreator.prototype.changeTextOfTextPath = function(d3node, d){
   d3node.select(".a"+String(d.source.id)+""+String(d.target.id)+"").remove();
   var nodeBCR = htmlEl.getBoundingClientRect(),
   curScale = nodeBCR.width/consts.nodeRadius,
-  placePad  =  5*curScale;
-  /* useHW = curScale > 1 ? nodeBCR.width*0.71 : consts.nodeRadius*1.42;*/
+  placePad  =  5*curScale,
+  useHW = curScale > 1 ? nodeBCR.width*0.71 : consts.nodeRadius*1.42;
   // replace with editableconent text
   var d3txt = thisGraph.svg.selectAll("foreignObject")
   .data([d])
   .enter()
   .append("foreignObject")
-  .attr("x", nodeBCR.left + 50 /*- (nodeBCR.right-nodeBCR.left)/2 */ )
-  .attr("y", nodeBCR.bottom - 50 /*-(nodeBCR.bottom - nodeBCR.top)/2*/ )
-  .attr("height", 4*nodeBCR.height /*2*useHW*/)
-  .attr("width", 4*nodeBCR.width/*useHW*/)
+  .attr("x", nodeBCR.left + placePad)
+  .attr("y", nodeBCR.top + placePad)
+  .attr("height", 2*useHW)
+  .attr("width", useHW)
   .append("xhtml:p")
   .attr("id", consts.activeEditId)
   .attr("contentEditable", "true")
