@@ -52,7 +52,7 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('new_client', function(){
     console.log('[SERVER] New client binded on port ' + port + ', id = ' + id + '\n');
-    socket.id = id;
+    //socket.id = id;
     socket.emit('id',id);
     id++;
   })
@@ -64,6 +64,9 @@ io.sockets.on('connection', function (socket) {
     if (lock == undefined) {
       socket.emit('nobody_edit', 'Edition allowed : you have the edition token');
       lock = socket.id;
+
+    }else if(lock == socket.id){
+      socket.emit('you_edit', 'You already have the edition');
     } else {
       socket.emit('already_edit','Edition refused : another client is editing this graph');
     }
