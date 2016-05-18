@@ -98,9 +98,10 @@ $("ul li").addClass(function( index ) {
 $(function(){
     $("#list_graph").on('click','li',function (){
         var confirms = confirm('Do you want to upload ' + $(this).html());
-        if(confirms)
+        if(confirms){
           socket.emit('upload_graph', $(this).html());
           $('.title').text($(this).html());
+        }
     });
 })
 
@@ -422,7 +423,7 @@ d3.select("#help").on("click", function() {
     });
     var blob = new Blob([window.JSON.stringify({"active": thisGraph.active,"init": thisGraph.init,"finals": thisGraph.finals, "nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
     if(edit == 1){
-      socket.emit('Graphe_five', blob);}}  , 5000);
+      socket.emit('Graphe_five', blob);}}  , 1000);
 
 
   // Communication à la sauvegarde
