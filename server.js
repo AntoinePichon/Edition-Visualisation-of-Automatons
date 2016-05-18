@@ -108,7 +108,6 @@ io.sockets.on('connection', function (socket) {
     save = 0;
     console.log('[SERVER] Graph saved (JSON file)\n');
     fs.writeFile('./Graphs/' + graph.title + '.json', graph.content);
-    console.log(graph.content);
     Graphs.push(graph.title + '.json');
     // Récupérer fichier .json stocké côté serveur
     saved_graph = [];
