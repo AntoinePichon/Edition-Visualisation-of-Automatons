@@ -1,1 +1,1 @@
-# Edition & Visualisation of Automats / Regular expression checker
+# Edition & Visualisation of Automata / Regular expression checker
